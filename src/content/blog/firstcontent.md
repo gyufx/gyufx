@@ -9,4 +9,4 @@ share: true
 
 # 첫 번째 글
 
-안녕하세요! 테스트 글입니다.![[090e5393fa9cfef49a1f2bfde97c94ac.gif|090e5393fa9cfef49a1f2bfde97c94ac.gif]]
+안녕하세요! 테스트 글입니다.![](090e5393fa9cfef49a1f2bfde97c94ac.gif)
