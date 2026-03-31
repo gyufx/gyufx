@@ -1,12 +1,10 @@
 ---
-title: 첫 번째 테스트 글
-description: 블로그 테스트입니다
+title: 블로그 테스트
+description: test
 pubDate: 2026-04-01
 tags:
   - test
 share: true
 ---
-
-# 첫 번째 글
-
-안녕하세요! 테스트 글입니다.![](090e5393fa9cfef49a1f2bfde97c94ac.gif)
+블로그 첫 테스트 입니다.
+![](https://res.cloudinary.com/dmizyiux6/image/upload/v1774984258/vbfijbhb91rgstgwj30r.gif)
