@@ -1,15 +1,16 @@
 ---
-import { Image } from 'astro:assets';
-import { getCollection } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { getCollection } from "astro:content";
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import Header from "../components/Header.astro";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 
-const posts = (await getCollection('blog')).sort(
+const posts = (await getCollection("blog")).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+const categories = ["전체", "VFX", "DEV", "ART", "Shader"];
 ---
 
 <!doctype html>
@@ -19,6 +20,28 @@ const posts = (await getCollection('blog')).sort(
 		<style>
 			main {
 				width: 960px;
+			}
+			.category-filter {
+				display: flex;
+				gap: 0.5rem;
+				flex-wrap: wrap;
+				margin-bottom: 2rem;
+			}
+			.category-btn {
+				padding: 0.4em 1em;
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 999px;
+				background: none;
+				cursor: pointer;
+				font-size: 0.9em;
+				color: rgb(var(--gray-dark));
+				transition: 0.2s ease;
+			}
+			.category-btn:hover,
+			.category-btn.active {
+				background: var(--accent);
+				color: white;
+				border-color: var(--accent);
 			}
 			ul {
 				display: flex;
@@ -35,20 +58,10 @@ const posts = (await getCollection('blog')).sort(
 				text-decoration: none;
 				transition: 0.2s ease;
 			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
 			ul li img {
 				margin-bottom: 0.5rem;
 				border-radius: 12px;
+				width: 100%;
 			}
 			ul li a {
 				display: block;
@@ -61,6 +74,11 @@ const posts = (await getCollection('blog')).sort(
 			.date {
 				margin: 0;
 				color: rgb(var(--gray));
+			}
+			.category-tag {
+				font-size: 0.75em;
+				color: var(--accent);
+				margin-bottom: 0.3em;
 			}
 			ul li a:hover h4,
 			ul li a:hover .date {
@@ -77,12 +95,6 @@ const posts = (await getCollection('blog')).sort(
 					width: 100%;
 					text-align: center;
 				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
 			}
 		</style>
 	</head>
@@ -90,17 +102,36 @@ const posts = (await getCollection('blog')).sort(
 		<Header />
 		<main>
 			<section>
-				<ul>
+				<div class="category-filter">
+					{
+						categories.map((cat) => (
+							<button
+								class={`category-btn ${cat === "전체" ? "active" : ""}`}
+								data-category={cat}
+							>
+								{cat}
+							</button>
+						))
+					}
+				</div>
+				<ul id="post-list">
 					{
 						posts.map((post) => (
-							<li>
+							<li data-category={post.data.category || "전체"}>
 								<a href={`/gyufx/blog/${post.id}/`}>
 									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
+										<img src={post.data.heroImage} alt="" />
+									)}
+									{post.data.category && (
+										<p class="category-tag">
+											{post.data.category}
+										</p>
 									)}
 									<h4 class="title">{post.data.title}</h4>
 									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
+										<FormattedDate
+											date={post.data.pubDate}
+										/>
 									</p>
 								</a>
 							</li>
@@ -110,5 +141,28 @@ const posts = (await getCollection('blog')).sort(
 			</section>
 		</main>
 		<Footer />
+
+		<script>
+			const buttons = document.querySelectorAll(".category-btn");
+			const items = document.querySelectorAll("#post-list li");
+
+			buttons.forEach((btn) => {
+				btn.addEventListener("click", () => {
+					buttons.forEach((b) => b.classList.remove("active"));
+					btn.classList.add("active");
+
+					const selected = btn.getAttribute("data-category");
+
+					items.forEach((item) => {
+						const cat = item.getAttribute("data-category");
+						if (selected === "전체" || cat === selected) {
+							(item as HTMLElement).style.display = "block";
+						} else {
+							(item as HTMLElement).style.display = "none";
+						}
+					});
+				});
+			});
+		</script>
 	</body>
 </html>
