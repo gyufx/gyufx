@@ -196,3 +196,17 @@ hr {
 	clip-path: inset(50%);
 	white-space: nowrap;
 }
+
+[data-theme="dark"] {
+	--accent: #7b8fff;
+	--accent-dark: #a0aaff;
+	--black: 240, 240, 245;
+	--gray: 160, 175, 200;
+	--gray-light: 40, 44, 55;
+	--gray-dark: 220, 225, 235;
+	--gray-gradient: rgba(var(--gray-light), 50%), #1a1d27;
+	--bg: #1a1d27;
+	--text: rgb(var(--gray-dark));
+	--header-bg: #13151f;
+	--code-bg: #2a2d3a;
+}

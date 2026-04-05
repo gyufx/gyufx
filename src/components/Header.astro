@@ -12,6 +12,22 @@ import HeaderLink from './HeaderLink.astro';
 			<HeaderLink href="/gyufx/about">About</HeaderLink>
 		</div>
 		<div class="social-links">
+			<button id="theme-toggle" aria-label="Toggle dark mode">
+				<svg id="icon-sun" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+					<circle cx="12" cy="12" r="5"/>
+					<line x1="12" y1="1" x2="12" y2="3"/>
+					<line x1="12" y1="21" x2="12" y2="23"/>
+					<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+					<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+					<line x1="1" y1="12" x2="3" y2="12"/>
+					<line x1="21" y1="12" x2="23" y2="12"/>
+					<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+					<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+				</svg>
+				<svg id="icon-moon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+				</svg>
+			</button>
 			<a href="https://www.youtube.com/@GyuFX" target="_blank">
 				<span class="sr-only">YouTube</span>
 				<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32">
@@ -27,11 +43,44 @@ import HeaderLink from './HeaderLink.astro';
 		</div>
 	</nav>
 </header>
+
+<script>
+	const toggle = document.getElementById('theme-toggle');
+	const root = document.documentElement;
+	const sunIcon = document.getElementById('icon-sun');
+	const moonIcon = document.getElementById('icon-moon');
+
+	const savedTheme = localStorage.getItem('theme');
+	if (savedTheme === 'dark') {
+		root.setAttribute('data-theme', 'dark');
+	}
+
+	function updateIcons() {
+		const isDark = root.getAttribute('data-theme') === 'dark';
+		if (sunIcon) sunIcon.style.display = isDark ? 'block' : 'none';
+		if (moonIcon) moonIcon.style.display = isDark ? 'none' : 'block';
+	}
+
+	updateIcons();
+
+	toggle?.addEventListener('click', () => {
+		const isDark = root.getAttribute('data-theme') === 'dark';
+		if (isDark) {
+			root.removeAttribute('data-theme');
+			localStorage.setItem('theme', 'light');
+		} else {
+			root.setAttribute('data-theme', 'dark');
+			localStorage.setItem('theme', 'dark');
+		}
+		updateIcons();
+	});
+</script>
+
 <style>
 	header {
 		margin: 0;
 		padding: 0 1em;
-		background: white;
+		background: var(--header-bg);
 		box-shadow: 0 2px 8px rgba(var(--black), 5%);
 	}
 	h2 {
@@ -49,7 +98,7 @@ import HeaderLink from './HeaderLink.astro';
 	}
 	nav a {
 		padding: 1em 0.5em;
-		color: var(--black);
+		color: rgb(var(--black));
 		border-bottom: 4px solid transparent;
 		text-decoration: none;
 	}
@@ -57,9 +106,22 @@ import HeaderLink from './HeaderLink.astro';
 		text-decoration: none;
 		border-bottom-color: var(--accent);
 	}
-	.social-links,
+	.social-links {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+	}
 	.social-links a {
 		display: flex;
+	}
+	#theme-toggle {
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0.5em;
+		color: rgb(var(--black));
+		display: flex;
+		align-items: center;
 	}
 	@media (max-width: 720px) {
 		.social-links {
